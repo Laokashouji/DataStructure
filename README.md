@@ -1,2 +1,2 @@
-# DataSructure
+# DataStructure
 数据结构作业
