@@ -22,7 +22,7 @@ Status InitList(SqList *L);                       /* 初始化顺序线性表 */
 Status ListEmpty(SqList L);                       /*若L为空表，则返回TRUE，否则返回FALSE */
 Status ListLength(SqList L, int *length);          /*用length返回L中数据元素个数 */
 Status GetElem(SqList L, int i, ElemType *e);     /* 用e返回L中第i个数据元素的值,注意i是指位置，第1个位置的数组是从0开始 */
-Status ListInsert(SqList *L, int i, ElemType e);  /* 在L中第i个位置之前插入新的数据元素e，L的长度加1 */
+Status ListInsert(SqList *L, int i, ElemType e);  /* 在L中的位置i插入元素e */
 Status ListDelete(SqList *L, int i, ElemType *e); /* 操作结果：删除L的第i个数据元素，并用e返回其值，L的长度减1 */
 Status ListTraverse(SqList L);                    /* 操作结果：依次对L的每个数据元素输出 */
 Status Destory(SqList *L);                        /*销毁数组*/
