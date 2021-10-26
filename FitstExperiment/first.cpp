@@ -15,7 +15,7 @@ bool cut_next(Node *now,int move);
 void Josephus(int n,int m,Node *head);
 void special_Josephus(int n,Node *head);
 
-Node * creat_and_prepare(int n){ //循环链表创建函数,并且每个结点的id为n-1
+Node * creat_and_prepare(int n){
     Node *head , *current;
     head = (Node*)malloc(sizeof(Node));
     current = head ;
