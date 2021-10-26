@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 struct Node{//时间17点16分
-    int id ;
+    int id ;//mac 下如何
     Node *next = NULL;
 };
 
