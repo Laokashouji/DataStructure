@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 struct Node{//结点结构体起手
-    int id ;//当前位置编号
+    int id ;
     Node *next = NULL;
 };
 
