@@ -13,7 +13,7 @@ int count(Node *head);
 bool check(Node *head);
 bool cut_next(Node *now,int move);
 void Josephus(int n,int m,Node *head);
-void special_Josephus(int n,Node *head);
+void special_Josephus(int n,Node *head);//testpush
 
 Node * creat_and_prepare(int n){ 
     Node *head , *current;
