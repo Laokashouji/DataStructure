@@ -71,6 +71,6 @@ int main()
     scanf("%d%d", &sx, &sy);
     printf("请输入迷宫的终点坐标：");
     scanf("%d%d", &tx, &ty);
-
+//记得休息一下嗷 
     return 0;
 }
