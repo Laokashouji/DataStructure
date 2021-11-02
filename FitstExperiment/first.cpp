@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
-struct Node{
-    int id ;
+struct Node{//时间17点16分
+    int id ;//mac 下如何
     Node *next = NULL;
 };
 
@@ -15,7 +15,7 @@ bool cut_next(Node *now,int move);
 void Josephus(int n,int m,Node *head);
 void special_Josephus(int n,Node *head);
 
-Node * creat_and_prepare(int n){ //ѭ��������������,����ÿ������idΪn-1
+Node * creat_and_prepare(int n){ //循环链表创建函数,并且每个结点的id为n-1
     Node *head , *current;
     head = (Node*)malloc(sizeof(Node));
     current = head ;
@@ -29,7 +29,7 @@ Node * creat_and_prepare(int n){ //ѭ��������������,
     return current;
 }
 
-void in(Node *end){//����4 β���뺯��
+void in(Node *end){//函数4 尾插入函数
     Node *temp = (Node*)malloc(sizeof(Node));
     int n = count(end);
     temp ->id = n-1;
@@ -37,7 +37,7 @@ void in(Node *end){//����4 β���뺯��
     end ->next = temp;
 }
 
-bool cut(Node *end,int n){//����5 ��λ��ɾ��Ԫ�غ���
+bool cut(Node *end,int n){//函数5 按位置删除元素函数
     if(n> count(end)){
         return  0;
     }
@@ -54,7 +54,7 @@ bool cut(Node *end,int n){//����5 ��λ��ɾ��Ԫ�غ���
     return 1;
 }
 
-void all_out(Node *end){//����6 �������
+void all_out(Node *end){//函数6 遍历输出
     int n = count(end);
     Node *temp = end;
     int count = 0;
@@ -66,7 +66,7 @@ void all_out(Node *end){//����6 �������
 
 }
 
-int count(Node *end){//����7 ��������ĺ���
+int count(Node *end){//函数7 计算表长的函数
     Node *first = end;
     Node *count = end->next;
     int count_number = 0;
@@ -77,13 +77,13 @@ int count(Node *end){//����7 ��������ĺ���
     return count_number+1;
 }
 
-bool check(Node *end){//����8 �ж��Ƿ�Ϊ�ձ�
+bool check(Node *end){//函数8 判断是否为空表
     if(count(end) == 1){
         return 1;
     }else return 0;
 }
 
-bool cut_next(Node *now,int move){//ɾ����һ�����
+bool cut_next(Node *now,int move){//删除下一个结点
     printf("<%d,%d>\n",(now->next->id)+1,move);
     Node *temp = now;
     Node *del = NULL;
@@ -107,6 +107,9 @@ void Josephus(int n,int m,Node *end){
         step++;
         all_step++;
     }
+    printf("<%d,%d>\n",(temp->next->id)+1,all_step);
+    cut(temp,1);
+
 //    printf("the luck guy is %d\n",(temp->id)+1);
 //    printf("step = %d",all_step);
 }
@@ -117,6 +120,8 @@ void special_Josephus(int n,Node *head){
     while(count(temp) != 1){
         cut_next(temp,all_step);
     }
+    printf("<%d,%d>\n",(temp->next->id)+1,all_step);
+    cut(temp,1);
 //    printf("the luck guy is %d\n",(temp->id)+1);
 //    printf("step = %d",all_step);
 }

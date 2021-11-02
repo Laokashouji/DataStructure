@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
-struct Node{//½áµã½á¹¹ÌåÆðÊÖ£¬Õâ²¨ÎÈÁË
-    int id ;//µ±Ç°Î»ÖÃ±àºÅ
+struct Node{
+    int id ;
     Node *next = NULL;
 };
 
@@ -13,9 +13,9 @@ int count(Node *head);
 bool check(Node *head);
 bool cut_next(Node *now,int move);
 void Josephus(int n,int m,Node *head);
-void special_Josephus(int n,Node *head);
+void special_Josephus(int n,Node *head);//testpush
 
-Node * creat_and_prepare(int n){ //Ñ­»·Á´±í´´½¨º¯Êý,²¢ÇÒÃ¿¸ö½áµãµÄidÎªn-1
+Node * creat_and_prepare(int n){ 
     Node *head , *current;
     head = (Node*)malloc(sizeof(Node));
     current = head ;
@@ -29,7 +29,7 @@ Node * creat_and_prepare(int n){ //Ñ­»·Á´±í´´½¨º¯Êý,²¢ÇÒÃ¿¸ö½áµãµÄidÎªn-1
     return current;
 }
 
-void in(Node *end){//º¯Êý4 Î²²åÈëº¯Êý
+void in(Node *end){//ï¿½ï¿½ï¿½ï¿½4 Î²ï¿½ï¿½ï¿½ëº¯ï¿½ï¿½
     Node *temp = (Node*)malloc(sizeof(Node));
     int n = count(end);
     temp ->id = n-1;
@@ -37,7 +37,7 @@ void in(Node *end){//º¯Êý4 Î²²åÈëº¯Êý
     end ->next = temp;
 }
 
-bool cut(Node *end,int n){//º¯Êý5 °´Î»ÖÃÉ¾³ýÔªËØº¯Êý
+bool cut(Node *end,int n){//ï¿½ï¿½ï¿½ï¿½5 ï¿½ï¿½Î»ï¿½ï¿½É¾ï¿½ï¿½Ôªï¿½Øºï¿½ï¿½ï¿½
     if(n> count(end)){
         return  0;
     }
@@ -54,7 +54,7 @@ bool cut(Node *end,int n){//º¯Êý5 °´Î»ÖÃÉ¾³ýÔªËØº¯Êý
     return 1;
 }
 
-void all_out(Node *end){//º¯Êý6 ±éÀúÊä³ö
+void all_out(Node *end){//ï¿½ï¿½ï¿½ï¿½6 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     int n = count(end);
     Node *temp = end;
     int count = 0;
@@ -66,7 +66,7 @@ void all_out(Node *end){//º¯Êý6 ±éÀúÊä³ö
 
 }
 
-int count(Node *end){//º¯Êý7 ¼ÆËã±í³¤µÄº¯Êý
+int count(Node *end){//ï¿½ï¿½ï¿½ï¿½7 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½
     Node *first = end;
     Node *count = end->next;
     int count_number = 0;
@@ -77,13 +77,13 @@ int count(Node *end){//º¯Êý7 ¼ÆËã±í³¤µÄº¯Êý
     return count_number+1;
 }
 
-bool check(Node *end){//º¯Êý8 ÅÐ¶ÏÊÇ·ñÎª¿Õ±í
+bool check(Node *end){//ï¿½ï¿½ï¿½ï¿½8 ï¿½Ð¶ï¿½ï¿½Ç·ï¿½Îªï¿½Õ±ï¿½
     if(count(end) == 1){
         return 1;
     }else return 0;
 }
 
-bool cut_next(Node *now,int move){//É¾³ýÏÂÒ»¸ö½áµã
+bool cut_next(Node *now,int move){//É¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½
     printf("\nthe kill number is %d and the step is %d\n",(now->next->id)+1,move);
     Node *temp = now;
     Node *del = NULL;
