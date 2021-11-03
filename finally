@@ -1,5 +1,0 @@
-使用ssh链接的时候 可以直接上去
-clion里有默认ssh clone 当使用sshclone时，默认ssh链接push，所以可以，而vscode里直接clone没法直接ssh
-解决方法 第一次采用sshclone  或者用clionclone 之后再用vscode打开
-如果采用代理 还需要再次配置
-

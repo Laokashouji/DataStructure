@@ -3,7 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/Users/mac/Study/CodeFiled/DataStructure/SecondExperiment/include"
             ],
             "defines": [],
             "macFrameworkPath": [],

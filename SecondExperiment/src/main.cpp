@@ -1,76 +1,114 @@
-//µ¥ÎÄ¼ş°æ
+//å•æ–‡ä»¶ç‰ˆ
+#pragma clang diagnostic ignored "-Winvalid-source-encoding"
+
 #include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cstdarg>
-
-#define MAXM 100
-#define MAXN 100
-#define MAX_ARRAY_DIM 8 //Êı×éÎ¬ÊıµÄ×î´óÖµ
-
-template <class ElemType>
-struct Stack
+#include "array.h"
+#include "stack.h"
+#include "queue.h"
+struct point
 {
-    int st[MAXM + MAXN + 5];
-    Stack()
+    int x, y;
+    int d; //æ–¹å‘
+    point(int x = 0, int y = 0, int d = 0)
     {
-        memset(st, 0, sizeof(st));
+        this->x = x;
+        this->y = y;
+        this->d = d;
     }
 };
+const int direction[] = {0, 1, 2, 3};
+char ud[4][10] = {"ä¸œ", "å—", "è¥¿", "åŒ—"};
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {1, 0, -1, 0};
 
-template <class ElemType>
-struct Queue
-{
-    int q[MAXM + MAXN + 5];
-    Queue()
-    {
-        memset(q, 0, sizeof(q));
-    }
-};
+void Print_DFS_Answer(Stack<point> &S, int x, int y);
+void MY_DFS(Array<int> map, int sx, int sy, int tx, int ty);
 
-template <class ElemType>
-struct Array //°´ÁĞÓÅÏÈË³Ğò´æ´¢
-{
-    ElemType **a;
-    int dim;    //Êı×éÎ¬Êı
-    int *bounds;    //Êı×é¸÷Î¬µÄ³¤¶È
-    
-
-
-
-
-
-
-
-    Array(int m = 0, int n = 0) : m(m), n(n)
-    {
-    }
-    void init(int m, int n)
-    {
-        a = (int *)malloc(m * sizeof(int *));
-        for (int i = 0; i < n; i++)
-            a[m]
-    }
-    void assign()
-    {
-    }
-};
 int main()
 {
-    int map[MAXN][MAXM];
-    int m, n;
-    printf("ÇëÊäÈëÃÔ¹¬µÄĞĞÊı£º");
-    scanf("%d", &m);
-    printf("ÇëÊäÈëÃÔ¹¬µÄÁĞÊı£º");
-    scanf("%d", &n);
-    
-    printf("ÏÂÃæÇëÊäÈëÃÔ¹¬£¨Í¨µÀÎª0£¬Ç½Îª1£©£º\n");
+    Array<int> map;
+    Queue<point> Q;
 
-    int sx, sy, tx, ty; //·Ö±ğÎªÈë¿ÚºÍ³ö¿ÚµÄĞĞÁĞ×ó±ß
-    printf("ÇëÊäÈëÃÔ¹¬µÄÆğµã×ø±ê£º");
+    //freopen("in.txt", "r", stdin); //è°ƒè¯•ç”¨
+
+    int m, n;
+    printf("è¯·è¾“å…¥è¿·å®«çš„è¡Œæ•°ï¼š");
+    scanf("%d", &m);
+    printf("è¯·è¾“å…¥è¿·å®«çš„åˆ—æ•°ï¼š");
+    scanf("%d", &n);
+    map.InitArray(2, m + 2, n + 2);
+
+    int Elem;
+    printf("ä¸‹é¢è¯·è¾“å…¥è¿·å®«ï¼ˆé€šé“ä¸º0ï¼Œå¢™ä¸º1ï¼‰ï¼š\n");
+    for (int i = 0; i <= m + 1; i++)
+        for (int j = 0; j <= n + 1; j++)
+        {
+            if (!(i && j) || i == m + 1 || j == n + 1)
+                Elem = 1;
+            else
+                scanf("%d", &Elem);
+            map.Assign(&Elem, i, j);
+        }
+
+    int sx, sy, tx, ty; //åˆ†åˆ«ä¸ºå…¥å£å’Œå‡ºå£çš„è¡Œåˆ—åæ ‡
+    printf("è¯·è¾“å…¥è¿·å®«çš„èµ·ç‚¹åæ ‡ï¼š");
     scanf("%d%d", &sx, &sy);
-    printf("ÇëÊäÈëÃÔ¹¬µÄÖÕµã×ø±ê£º");
+    printf("è¯·è¾“å…¥è¿·å®«çš„ç»ˆç‚¹åæ ‡ï¼š");
     scanf("%d%d", &tx, &ty);
-//¼ÇµÃĞİÏ¢Ò»ÏÂà» 
+
+    MY_DFS(map, sx, sy, tx, ty); 
+    //è®°å¾—ä¼‘æ¯ä¸€ä¸‹å—·
     return 0;
+}
+void Print_DFS_Answer(Stack<point> &S, int x, int y)
+{
+    if (S.Empty())
+        return;
+    point ans;
+    S.Pop(ans);
+    Print_DFS_Answer(S, ans.x, ans.y);
+    printf("(%d,%d)å‘%sç§»åŠ¨åˆ°è¾¾(%d,%d)\n", ans.x, ans.y, ud[ans.d], x, y);
+}
+void MY_DFS(Array<int> map, int sx, int sy, int tx, int ty)
+{
+    Stack<point> S;
+    S.InitStack();
+    point now(sx, sy, -1);
+    S.Push(now);
+    //æ ‡è®°è®¿é—®
+    int vis = -1;
+
+    while (!S.Empty())
+    {
+        S.Pop(now);
+
+        int Elem;
+        now.d++;
+        while (now.d < 4)
+        {
+            map.Value(&Elem, now.x + dx[now.d], now.y + dy[now.d]);
+            if (Elem != 0)
+            {
+                now.d++;
+                continue;
+            }
+            S.Push(now);
+            map.Assign(&vis, now.x, now.y);
+
+            now.x += dx[now.d];
+            now.y += dy[now.d];
+            if (now.x == tx && now.y == ty) //è¾“å‡ºç­”æ¡ˆ
+            {
+                Print_DFS_Answer(S, tx, ty);
+                S.DestoryStack();
+                return;
+            }
+            else
+            {
+                now.d = 0;
+            }
+        }
+    }
+    printf("æ‰¾ä¸åˆ°è·¯å¾„\n");
+    return;
 }
