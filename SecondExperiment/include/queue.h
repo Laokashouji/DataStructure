@@ -24,6 +24,8 @@ public:
     Status Empty();
 };
 
+
+
 template <class ElemType>
 Status Queue<ElemType>::InitQueue()
 {
@@ -33,6 +35,7 @@ Status Queue<ElemType>::InitQueue()
     front = rear = 0;
     return OK;
 }
+
 template <class ElemType>
 Status Queue<ElemType>::DestoryQueue()
 {
@@ -42,6 +45,7 @@ Status Queue<ElemType>::DestoryQueue()
     front = rear = 0;
     return OK;
 }
+
 template <class ElemType>
 Status Queue<ElemType>::Push(ElemType e)
 {
@@ -51,6 +55,7 @@ Status Queue<ElemType>::Push(ElemType e)
     rear = (rear + 1) % QUEUE_INIT_SIZE; 
     return OK;
 }
+
 template <class ElemType>
 Status Queue<ElemType>::Pop(ElemType &e)
 {
@@ -60,6 +65,7 @@ Status Queue<ElemType>::Pop(ElemType &e)
     front = (front + 1) % QUEUE_INIT_SIZE;
     return OK;
 }
+
 template <class ElemType>
 Status Queue<ElemType>::Empty()
 {

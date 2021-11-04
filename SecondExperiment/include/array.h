@@ -8,6 +8,8 @@
 
 typedef int ElemType;
 typedef int Status;
+
+
 template <class ElemType>
 class Array //按列优先顺序存储
 {
@@ -24,6 +26,9 @@ public:
     Status Assign(ElemType *elm, ...);   ///数组赋值
     Status Value(ElemType *elm, ...);    ///数组取值
 };
+
+
+
 template <class ElemType>
 Status Array<ElemType>::InitArray(int nDim, ...)
 {
@@ -70,6 +75,7 @@ Status Array<ElemType>::InitArray(int nDim, ...)
 
     return OK;
 }
+
 template <class ElemType>
 Status Array<ElemType>::DestroyArray()
 {

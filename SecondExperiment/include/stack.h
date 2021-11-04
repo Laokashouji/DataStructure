@@ -24,6 +24,9 @@ public:
     Status Empty();
 };
 
+
+
+
 template <class ElemType>
 Status Stack<ElemType>::InitStack()
 {
@@ -34,6 +37,7 @@ Status Stack<ElemType>::InitStack()
     stacksize = STACK_INIT_SIZE;
     return OK;
 }
+
 template <class ElemType>
 Status Stack<ElemType>::DestoryStack()
 {
@@ -42,6 +46,7 @@ Status Stack<ElemType>::DestoryStack()
     stacksize = 0;
     return OK;
 }
+
 template <class ElemType>
 Status Stack<ElemType>::Push(ElemType e)
 {
@@ -56,6 +61,7 @@ Status Stack<ElemType>::Push(ElemType e)
     *top++ = e;
     return OK;
 }
+
 template <class ElemType>
 Status Stack<ElemType>::Pop(ElemType &e)
 {
@@ -64,11 +70,13 @@ Status Stack<ElemType>::Pop(ElemType &e)
     e = *--top;
     return OK;
 }
+
 template <class ElemType>
 Status Stack<ElemType>::Empty()
 {
     return top == base;
 }
+
 template <class ElemType>
 Status Stack<ElemType>::Top(ElemType &e)
 {

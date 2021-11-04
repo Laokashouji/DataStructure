@@ -80,6 +80,8 @@ int main()
     MY_DFS(map1, sx, sy, tx, ty);
     MY_BFS(map2, sx, sy, tx, ty);
     //记得休息一下嗷
+    map1.DestroyArray();
+    map2.DestroyArray();
     return 0;
 }
 
@@ -198,5 +200,6 @@ void MY_BFS(Array<int> map, int sx, int sy, int tx, int ty)
         }
     }
 
+    Q.DestoryQueue();
     return;
 }
