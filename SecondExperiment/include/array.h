@@ -2,8 +2,6 @@
 #include <cstdlib>
 #define OK 1
 #define ERROR -1
-#define OK 1
-#define ERROR -1
 #define MAX_DIM 8 ///允许的最大数组维数
 
 typedef int ElemType;
@@ -17,7 +15,7 @@ private:
     ElemType *base;
     int dim;     //数组维数
     int *bounds; //数组各维的长度
-    int *constants;
+    int *constants; //数组维界映像基址
 
 public:
     Status InitArray(int nDim, ...);     ///初始化数组 pArr
