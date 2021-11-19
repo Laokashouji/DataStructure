@@ -1,4 +1,3 @@
-//单文件版
 #pragma clang diagnostic ignored "-Winvalid-source-encoding"
 
 #include <cstdio>
@@ -48,8 +47,8 @@ int main()
 {
     Array<int> map1, map2;
 
-    //freopen("in2.txt", "r", stdin); //调试用
-    //freopen("out2.txt","w",stdout);
+    freopen("in2.txt", "r", stdin); //调试用
+    freopen("out2.txt","w",stdout);
     int m, n;
     printf("请输入迷宫的行数：");
     scanf("%d", &m);
