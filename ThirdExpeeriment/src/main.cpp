@@ -1,24 +1,25 @@
-#include <iostream>
-#include <fstream>
 #include <algorithm>
+
+#include "myio.h"
+
+#define MaxBytes 100000
+#define OK 1
+#define ERROR -1
+
 using namespace std;
+
 int main()
 {
-    ifstream in;
-    ofstream out;
     char infile[100], outfile[100];
-    cout << "请输入输入文件名:";
-    cin >> infile;
-    in.open(infile);
-    cout << "\n请输入输出文件名:";
-    cin >> outfile;
-    out.open(outfile);
+    if((read_iofiles(infile, outfile) == ERROR))
+        return 1;
 
-    char test[100];
-    in >> test;
-    out << test;
+    char bytes[MaxBytes];
+    readBytes(bytes, infile);
+   
 
-    in.close();
-    out.close();
+
+
+    
     return 0;
 }
