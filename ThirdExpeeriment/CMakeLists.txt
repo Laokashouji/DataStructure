@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.1)
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 11)
 # 设置PROJECT_NAME变量
-set(PROJECT_NAME HuffmanTree)
+set(PROJECT_NAME main)
 
 # 设置工程名
 project (${PROJECT_NAME})
