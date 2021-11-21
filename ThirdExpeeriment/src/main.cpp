@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include "Frost.h"
 using namespace std;
 int main()
 {
@@ -14,9 +15,7 @@ int main()
     cin >> outfile;
     out.open(outfile);
 
-    char test[100];
-    in >> test;
-    out << test;
+    
 
     in.close();
     out.close();
