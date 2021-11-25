@@ -5,15 +5,9 @@
 void Frost::init(int *weight, int leaves)
 {
     trees = (HuffmanTree *)malloc((leaves + 1) * sizeof(HuffmanTree)); //分配内存空间
-    num = 0;                                                           //初始化节点
-    for (int i = 1, tot = 1; tot <= leaves; i++)
-    {
+    for (int i = 0; i < MaxCharSize; i++)
         if (weight[i])
-        {
             push(trees->newTree(weight[i], (char)i));
-            tot++;
-        }
-    }
 }
 void Frost::push(HuffmanTree tree)
 {

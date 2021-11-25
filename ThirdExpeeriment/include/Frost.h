@@ -6,7 +6,7 @@ class Frost
 {
 private:
     HuffmanTree *trees;
-    int num;
+    int num = 0;
 
 public:
     void init(int *weight, int leaves);
@@ -14,7 +14,6 @@ public:
     void push(HuffmanTree tree);
     void check_down(int i);
     void check_up(int i);
-    HuffmanTree combine(HuffmanTree left, HuffmanTree right);
     HuffmanTree top(){
         return trees[1];
     }
