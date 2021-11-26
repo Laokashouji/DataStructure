@@ -33,3 +33,8 @@ int count_occchar(char *codingstring, int *appear_times)
     if(appear_times[i])  tot++;
     return tot;
 }
+
+HuffmanTree build_tree(char *codedstring)
+{
+    
+}

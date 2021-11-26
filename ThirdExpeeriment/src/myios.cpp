@@ -74,7 +74,23 @@ bool read_string(char *str, char *infile)
     in.close();
     return true;
 }
+bool read_string(char *str, char *info, char *infile)
+{
+    ifstream in(infile, ios::in | ios::binary); //以二进制输入格式打开
+    if (!in)
+    {
+        cout << "文件打开失败!";
+        return false;
+    }
 
+    ostringstream tmp;
+    tmp << in.rdbuf();
+    string ss = tmp.str();
+    strcpy(str, ss.c_str());
+
+    in.close();
+    return true;
+}
 //输出编码结果
 void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, int mode)
 {

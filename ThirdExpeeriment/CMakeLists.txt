@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 # 设置PROJECT_NAME变量
 set(PROJECT_NAME main)
 
+#设置编译模式为debug
 set(CMAKE_BUILD_TYPE "Debug")
 # 设置工程名
 project (${PROJECT_NAME})
