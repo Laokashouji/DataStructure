@@ -7,9 +7,17 @@
 using namespace std;
 
 //读入运行模式
-int read_mode()
+int read_runmode()
 {
     cout << "请选择运行模式, '1'表示编码, '2'表示解码, 请输入:";
+    int mode = 1;
+    cin >> mode;
+    return mode;
+}
+//读入输出模式
+int read_printmode()
+{
+    cout << "请选择输出模式, '1'表示输出字符串, '2'表示输出为比特流, 请输入:";
     int mode = 1;
     cin >> mode;
     return mode;
@@ -48,7 +56,6 @@ bool read_filename(char *infile, char *outfile)
     }
     return true;
 }
-
 //输入待编码字符串
 bool read_string(char *str, char *infile)
 {
@@ -69,14 +76,42 @@ bool read_string(char *str, char *infile)
 }
 
 //输出编码结果
-void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile)
+void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, int mode)
 {
-    ofstream out(outfile, ios::out | ios::binary);
-    for (int i = 0; codingstring[i] != '\0'; i++)
-        out << map[codingstring[i]];
+    ofstream out;
+    if (mode == 1)
+    {
+        out.open(outfile, ios::out | ios::trunc);
+        for (int i = 0; codingstring[i] != '\0'; i++)
+            out << map[codingstring[i]];
+    }
+    else if (mode == 2)
+    {
+        out.open(outfile, ios::out | ios::trunc | ios::binary);
+    }
     out.close();
 }
+//输出还原信息
+void print_msg(int *appear_times, char *outfile, int mode)
+{
+    ofstream out;
+    if (mode == 1)
+    {
+        out.open(outfile, ios::out | ios::trunc);
+        for (int i = 0; i < MaxCharSize; i++)
+        {
+            if (appear_times[i])
+                cout << appear_times[i] << (char)i;
+        }
 
+    }
+    else if (mode == 2)
+    {
+        out.open(outfile, ios::out | ios::binary | ios::trunc);
+        out.write((char *)appear_times, MaxCharSize * sizeof(int));
+    }
+    out.close();
+}
 //输出某个字符串或者数组
 void show(char *str)
 {
