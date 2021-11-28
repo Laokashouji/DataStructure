@@ -42,6 +42,8 @@ int main()
         mode = read_printmode();
         print_msg(appear_times, outfile, mode);        //输出各字符串出现次数数组便于还原哈夫曼树
         print_codes(codingstring, map, outfile, mode); //输出编码结果
+
+        //show(codingstring);
     }
     else if (mode == 2) // 代表解码
     {

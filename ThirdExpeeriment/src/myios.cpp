@@ -85,7 +85,6 @@ bool read_string(char *str, char *infile) //输入待编码字符串
 }
 bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼树信息和待解码字符串
 {
-
     ifstream in(infile, ios::in | ios::binary); //以二进制输入格式打开
     if (!in)
     {
@@ -94,18 +93,24 @@ bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼�
     }
     char ch;
     int t;
+    /*
     if (mode == 1) //输入文件为文本文件
     {
         //将文件内容全部读入, 并分为还原信息和解码内容
-        stringstream tmp;
-        tmp << in.rdbuf();
-        string ss = tmp.str();
-        while (tmp >> ch >> t && t != INF)
+        in.read((char *)&ch, sizeof(char));
+        while (in >> t && t < INF)
+        {
             msg[ch] = t;
-        int pos = ss.find("\n");
-        strcpy(str, ss.c_str() + pos + 1);
+            in.read((char *)&ch, sizeof(char));
+        }
+        int begin = in.tellg();
+        in.seekg(0, ios::end);
+        int end = in.tellg();
+        in.seekg(begin, ios::beg);
+        in.read(str, end - begin);
     }
-    else if (mode == 2) //输入文件为二进制文件
+    */
+    if (mode == 1 || mode == 2) //输入文件为二进制文件
     {
         int tot;
         in.read((char *)&tot, sizeof(tot));
@@ -118,9 +123,11 @@ bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼�
         int begin = in.tellg();
         in.seekg(0, ios::end);
         int end = in.tellg();
+        begin++;
         in.seekg(begin, ios::beg);
         in.read(str, end - begin);
-        str[MaxStringLength - 1] = end - begin;
+        str[MaxStringLength - 1] = (end - begin) >> 4;
+        str[MaxStringLength - 2] = (end - begin) % 256;
     }
     in.close();
     return true;
@@ -129,20 +136,17 @@ bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼�
 //输出编码或解码结果
 void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, int mode) //编码结果
 {
-    ofstream out;
+    ofstream out(outfile, ios::out | ios::binary | ios::app);
     if (mode == 1) //输出为字符串
     {
-        out.open(outfile, ios::out | ios::app);
         int l = strlen(codingstring);
         for (int i = 0; i < l; i++)
             out << map[codingstring[i]];
     }
     else if (mode == 2) //输出为比特流
     {
-        out.open(outfile, ios::out | ios::binary | ios::app);
         char byte = 0;
         int l = strlen(codingstring);
-
         //组装字节
         char cnt = 1, code = 0;
         for (int i = 0; i < l; i++)
@@ -168,12 +172,11 @@ void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, i
 }
 void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //解码结果
 {
-    ofstream out;
     Node *root = HT.root();
+    ofstream out(outfile, ios::out | ios::binary | ios::trunc);
     if (mode == 1) //从文本文件解码
     {
         int l = strlen(codedstring);
-        out.open(outfile, ios::out | ios::trunc);
         for (int i = 0; i < l; i++)
         {
             if (codedstring[i] == '0' && root->left() != NULL)
@@ -198,8 +201,7 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
     }
     else if (mode == 2) //从二进制文件解码
     {
-        int l = codedstring[MaxStringLength - 1];
-        out.open(outfile, ios::out | ios::trunc | ios::binary);
+        int l = (codedstring[MaxStringLength - 1] << 4) + codedstring[MaxStringLength - 2];
         char cnt = codedstring[l - 1];
         char ch = 0;
         for (int i = 0; i < l - 1; i++)
@@ -231,20 +233,23 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
 //输出还原信息
 void print_msg(int *appear_times, char *outfile, int mode)
 {
-    ofstream out;
+    ofstream out(outfile, ios::out | ios::binary | ios::trunc);
+    /*
     if (mode == 1)
     {
-        out.open(outfile, ios::out | ios::trunc);
         for (int i = 0; i < MaxCharSize; i++)
         {
             if (appear_times[i])
-                out << (char)i << appear_times[i];
+            {
+                out.write((char *)&i, sizeof(char));
+                out << appear_times[i];
+            }
         }
         out << '\n';
     }
-    else if (mode == 2)
+    */
+    if (mode == 1 || mode == 2)
     {
-        out.open(outfile, ios::out | ios::binary | ios::trunc);
         int tot = 0;
         for (int i = 0; i < MaxCharSize; i++)
             if (appear_times[i])
@@ -258,6 +263,7 @@ void print_msg(int *appear_times, char *outfile, int mode)
                 out.write((char *)&appear_times[i], sizeof(int));
             }
         }
+        out << '\n';
     }
     out.close();
 }
