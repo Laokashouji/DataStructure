@@ -1,7 +1,7 @@
 #pragma once
 #include <cstddef>
 #define MaxCharSize 256
-#define MaxTreeDepth 50
+#define MaxTreeDepth 100
 class Node
 {
 private:

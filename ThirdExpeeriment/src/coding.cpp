@@ -1,7 +1,7 @@
 #include <cstring>
 #include "coding.h"
 
-void encoding(Node* root, char (*coding_table)[MaxTreeDepth], char code[], int t)
+void encoding(Node *root, char (*coding_table)[MaxTreeDepth], char code[], int t)
 {
     if (root->is_leave())
     {
@@ -22,19 +22,32 @@ void encoding(Node* root, char (*coding_table)[MaxTreeDepth], char code[], int t
     return;
 }
 
+//统计字符出现次数
 int count_occchar(char *codingstring, int *appear_times)
 {
     memset(appear_times, 0, sizeof(appear_times));
-    for (int i = 0; codingstring[i] != '\0'; i++)
+    int l = strlen(codingstring);
+    for (int i = 0; i < l; i++)
         appear_times[(int)codingstring[i]]++;
-    
+
     int tot = 0;
-    for(int i = 0; i < MaxCharSize; i++)
-    if(appear_times[i])  tot++;
+    for (int i = 0; i < MaxCharSize; i++)
+        if (appear_times[i])
+            tot++;
     return tot;
 }
 
-HuffmanTree build_tree(char *codedstring)
+//通过信息还原哈夫曼树
+HuffmanTree build_tree(int *msg, int mode)
 {
-    
+    if (mode == 1 || mode == 2)
+    {
+        HuffmanTree HT;
+        int leaves = 0;
+        for (int i = 0; i < MaxCharSize; i++)
+            if (msg[i])
+                leaves++;
+        return HT.BuildHT(msg, leaves);
+    }
+
 }
