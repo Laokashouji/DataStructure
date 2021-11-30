@@ -132,6 +132,10 @@ bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼�
     in.close();
     return true;
 }
+//和别小组统一格式后的读入
+bool read_string_group(char *str, int *msg, char *infile, int mode)
+{
+}
 
 //输出编码或解码结果
 void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, int mode) //编码结果
@@ -230,24 +234,15 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
     }
     out.close();
 }
+//与其他小组统一格式后的输出
+void print_codes_group()
+{
+}
+
 //输出还原信息
 void print_msg(int *appear_times, char *outfile, int mode)
 {
     ofstream out(outfile, ios::out | ios::binary | ios::trunc);
-    /*
-    if (mode == 1)
-    {
-        for (int i = 0; i < MaxCharSize; i++)
-        {
-            if (appear_times[i])
-            {
-                out.write((char *)&i, sizeof(char));
-                out << appear_times[i];
-            }
-        }
-        out << '\n';
-    }
-    */
     if (mode == 1 || mode == 2)
     {
         int tot = 0;
@@ -267,7 +262,44 @@ void print_msg(int *appear_times, char *outfile, int mode)
     }
     out.close();
 }
-
+void print_msg_group(int *appear_times, char *outfile, int mode)
+{
+    ostream out(outfile, ios::out | ios::trunc | ios::binary);
+    out.write((char *)&FILE_MAGIC_NUMBER, sizeof(int));
+    bool flag = (mode == 1 ? 0 : 1);
+    out.write((char *)&flag, sizeof(bool));
+    unsigned long long a;
+    for (int i = 0; i < MaxCharSize; i++)
+    {
+        a = appear_times[i];
+        out.write((char *)&a, sizeof(unsigned long long));
+    }
+    if (flag == 0) //文本
+    {
+        int l = strlen(codedstring);
+        for (int i = 0; i < l; i++)
+        {
+            if (codedstring[i] == '0' && root->left() != NULL)
+            {
+                root = root->left();
+                if (root->is_leave())
+                {
+                    out << root->data();
+                    root = HT.root();
+                }
+            }
+            else if (codedstring[i] == '1' && root->right() != NULL)
+            {
+                root = root->right();
+                if (root->is_leave())
+                {
+                    out << root->data();
+                    root = HT.root();
+                }
+            }
+        }
+    }
+}
 //输出某个字符串或者数组
 void show(char *str)
 {

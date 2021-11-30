@@ -3,11 +3,12 @@
 #include "myios.h"
 #include <cstdio>
 
+
 int main()
 {
 
     //freopen("in_encode.txt", "r", stdin); //编码
-    freopen("in_decode.txt", "r", stdin);//解码
+    //freopen("in_decode.txt", "r", stdin);//解码
 
     int mode = read_runmode(); //读入运行模式, 1为编码, 2为解码
     //读入输入输出文件
@@ -40,9 +41,16 @@ int main()
 
         //读入输出模式, '1'表示文本文件, '2'表示二进制文件
         mode = read_printmode();
+
+        //未统一前的输出格式,  也能运行
+        /*
         print_msg(appear_times, outfile, mode);        //输出各字符串出现次数数组便于还原哈夫曼树
         print_codes(codingstring, map, outfile, mode); //输出编码结果
+        */
 
+        //和其他小组统一后 的输出格式
+        print_msg_group(appear_times, outfile, mode);
+        print_codes_group(codingstring, map, outfile, mode);
         //show(codingstring);
     }
     else if (mode == 2) // 代表解码
