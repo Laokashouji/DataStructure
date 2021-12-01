@@ -1,4 +1,0 @@
-1
-encode.dat
-out.dat
-2

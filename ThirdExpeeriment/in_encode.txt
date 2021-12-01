@@ -1,4 +1,0 @@
-1
-main.exe
-encode.dat
-2
