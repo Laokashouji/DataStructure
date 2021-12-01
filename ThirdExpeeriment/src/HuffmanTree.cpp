@@ -1,14 +1,14 @@
 #include "Frost.h"
 #include "HuffmanTree.h"
-#include <cstdlib>
-
-HuffmanTree HuffmanTree::BuildHT(int *weight, int leaves) // weight为各个字符出现的次数, leaves为字符数
+HuffmanTree HuffmanTree::BuildHT(unsigned long long *weight) // weight为各个字符出现的次数, leaves为字符数
 {
     Frost HT;
-
     //初始化森林, 即为每个字符都建一棵树
-    HT.init(weight, leaves);
-
+    int leaves = 0;
+    for (int i = 0; i < MaxCharSize; i++)
+        if (weight[i])
+            leaves++;
+    HT.init(weight);
     //将森林转化为一颗哈夫曼树
     HuffmanTree first, second;
     for (int i = 1; i < leaves; ++i)
@@ -33,7 +33,7 @@ Node Node::newNode(Node *node1, Node *node2)
 HuffmanTree HuffmanTree::newTree(int weight, char element)
 {
     HuffmanTree T;
-    T.head = (Node*)malloc(sizeof(Node));
+    T.head = (Node *)malloc(sizeof(Node));
     *(T.head) = Node(weight, element);
     return T;
 }
@@ -41,7 +41,7 @@ HuffmanTree HuffmanTree::newTree(int weight, char element)
 HuffmanTree HuffmanTree::combine(HuffmanTree left, HuffmanTree right)
 {
     HuffmanTree tree;
-    tree.head = (Node*)malloc(sizeof(Node));
+    tree.head = (Node *)malloc(sizeof(Node));
     *(tree.head) = Node::newNode(left.head, right.head);
     return tree;
 }

@@ -1,4 +1,4 @@
 1
-code.dat
+main.exe
 encode.dat
 2

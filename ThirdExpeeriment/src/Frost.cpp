@@ -1,55 +1,34 @@
 #include <cstdlib>
+#include <algorithm>
 #include "HuffmanTree.h"
 #include "Frost.h"
 
-void Frost::init(int *weight, int leaves)
+bool cmp(HuffmanTree a, HuffmanTree b)
 {
-    trees = (HuffmanTree *)malloc((leaves + 1) * sizeof(HuffmanTree)); //分配内存空间
+    return a.root()->w() < b.root()->w();
+}
+void Frost::init(unsigned long long *weight)
+{
     for (int i = 0; i < MaxCharSize; i++)
         if (weight[i])
-            push(trees->newTree(weight[i], (char)i));
+            trees.push_back(HuffmanTree::newTree(weight[i], (unsigned char)i));
+    std::stable_sort(trees.begin() + num, trees.end(), cmp);
 }
 void Frost::push(HuffmanTree tree)
 {
-    trees[++num] = tree;
-    check_up(num);
+    trees.insert(trees.begin() + num, tree);
+    std::stable_sort(trees.begin() + num, trees.end(), cmp);
+    /*
+    for (auto it = trees.begin() + num; it < trees.end(); it++) {
+        fprintf(stderr, "%d ", it->root()->w());
+    }
+    fputs("\n", stderr);
+    */
 }
 
 HuffmanTree Frost::pop()
 {
-    HuffmanTree tree = trees[1];
-    trees[1] = trees[num--];
-    check_down(1);
+    HuffmanTree tree = trees[num];
+    num ++;
     return tree;
-}
-
-void Frost::check_down(int i)
-{
-    if (i * 2 > num)
-        return;
-    int min;
-    if (i * 2 + 1 > num)
-        min = i * 2;
-    else
-        min = trees[i * 2] < trees[i * 2 + 1] ? i * 2 : i * 2 + 1;
-    if (trees[min] < trees[i])
-    {
-        trees[0] = trees[min];
-        trees[min] = trees[i];
-        trees[i] = trees[0];
-        check_down(min);
-    }
-    return;
-}
-void Frost::check_up(int i)
-{
-    if (i / 2 < 1)
-        return;
-    if (trees[i] < trees[i / 2])
-    {
-        trees[0] = trees[i / 2];
-        trees[i / 2] = trees[i];
-        trees[i] = trees[0];
-        check_up(i / 2);
-    }
 }

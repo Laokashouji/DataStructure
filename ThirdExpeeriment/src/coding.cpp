@@ -1,12 +1,15 @@
 #include <cstring>
+#include <iostream>
+#include <fstream>
 #include "coding.h"
+using namespace std;
 
 void encoding(Node *root, char (*coding_table)[MaxTreeDepth], char code[], int t)
 {
     if (root->is_leave())
     {
         code[t] = '\0';
-        strcpy(coding_table[root->data()], code);
+        strcpy(coding_table[(unsigned char)root->data()], code);
         return;
     }
     if (root->left() != NULL)
@@ -22,32 +25,34 @@ void encoding(Node *root, char (*coding_table)[MaxTreeDepth], char code[], int t
     return;
 }
 
-//统计字符出现次数
-int count_occchar(char *codingstring, int *appear_times)
+bool count_occchar_group(unsigned long long *appear_times, char *infile)
 {
+    ifstream in(infile, ios::binary | ios::in); //以二进制输入格式打开
+    if (!in)
+    {
+        cout << "Failed to open file!";
+        return false;
+    }
     memset(appear_times, 0, sizeof(appear_times));
-    int l = strlen(codingstring);
+    unsigned char ch;
+    in.seekg(0, ios::end);
+    unsigned long long l = in.tellg();
+    in.seekg(0, ios::beg);
     for (int i = 0; i < l; i++)
-        appear_times[(int)codingstring[i]]++;
-
-    int tot = 0;
-    for (int i = 0; i < MaxCharSize; i++)
-        if (appear_times[i])
-            tot++;
-    return tot;
+    {
+        in.read((char *)&ch, sizeof(char));
+        appear_times[ch]++;
+    }
+    in.close();
+    return true;
 }
 
-//通过信息还原哈夫曼树
-HuffmanTree build_tree(int *msg, int mode)
-{
-    if (mode == 1 || mode == 2)
-    {
-        HuffmanTree HT;
-        int leaves = 0;
-        for (int i = 0; i < MaxCharSize; i++)
-            if (msg[i])
-                leaves++;
-        return HT.BuildHT(msg, leaves);
-    }
 
+void release(Node *root)
+{
+    if (root->left())
+        release(root->left());
+    if (root->right())
+        release(root->right());
+    free(root);
 }

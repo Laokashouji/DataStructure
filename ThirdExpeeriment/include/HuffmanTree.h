@@ -1,7 +1,9 @@
 #pragma once
 #include <cstddef>
+#include <cstdlib>
+
 #define MaxCharSize 256
-#define MaxTreeDepth 100
+#define MaxTreeDepth 256
 class Node
 {
 private:
@@ -15,14 +17,12 @@ public:
 
     static Node newNode(Node *node1, Node *node2);
     bool is_leave();
-    char data() {return element;}
-    Node* show_parent(){return parent;}
-    Node* left(){return lchild;}
-    Node* right(){return rchild;}
-    int w(){return weight;}
-    bool operator<(const Node &b){
-        return weight < b.weight;
-    }
+    char data() { return element; }
+    Node *show_parent() { return parent; }
+    Node *left() { return lchild; }
+    Node *right() { return rchild; }
+    int w() { return weight; }
+    
 };
 
 class HuffmanTree
@@ -32,13 +32,8 @@ private:
 
 public:
     HuffmanTree(Node *head = NULL) : head(head) {}
-    HuffmanTree BuildHT(int *weght, int leaves);
-    HuffmanTree newTree(int weight, char element);
-    HuffmanTree combine(HuffmanTree left, HuffmanTree right);
-    Node* root() {return head;}
-    bool operator < (const HuffmanTree &b){
-        return *head < *(b.head);
-    }
-    void showTree();
-};
-
+    static HuffmanTree BuildHT(unsigned long long *weght);
+    static HuffmanTree newTree(int weight, char element);
+    static HuffmanTree combine(HuffmanTree left, HuffmanTree right);
+    Node *root() { return head; }
+ };

@@ -3,7 +3,7 @@
 #include <cstring>
 #include "HuffmanTree.h"
 #define INF 2147483647
-#define MaxStringLength 100000
+#define MaxStringLength 1000000
 const int FILE_MAGIC_NUMBER = 'MZPS';
 
 int read_runmode();                              //读入运行模式,即编码与解码
@@ -14,13 +14,17 @@ bool read_filename(char *infile, char *outfile); //读入输入输出文件名
 //重载读入字符串函数以在编码和解码时都能使用
 bool read_string(char *str, char *infile);                     //对应编码
 bool read_string(char *str, int *msg, char *infile, int mode); //对应解码
-
+bool read_string_group(unsigned long long *msg, char *infile, int &mode);
 //重载输出编码函数以在编码和解码时都能使用
 void print_codes(char *condingstring, char (*map)[MaxTreeDepth], char *outfile, int mode); //对应编码
 void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode);                       //对应解码
 //输出哈夫曼树的信息
-void print_msg(int *appear_times, char *outfile, int mode);
-void print_msg_group(int *appear_times, char *outfile, int mode);
+void print_msg(unsigned long long *appear_times, char *outfile, int mode);
+//小组版
+void print_bits(unsigned long long *appear_times, char (*map)[MaxTreeDepth], char *outfile);
+void print_msg_group(unsigned long long *appear_times, char *outfile, int mode);
+void print_codes_group(char *infile, char (*map)[MaxTreeDepth], char *outfile, int mode);
+void print_codes_group(HuffmanTree &HT, char *infile, char *outfile, int mode);
 
 //打印变量便于调试
 void show(char *str);

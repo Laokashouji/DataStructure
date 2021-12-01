@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <cstring>
 #include "myios.h"
 
@@ -9,21 +8,14 @@ using namespace std;
 //读入运行模式, 编码模式, 解码模式
 int read_runmode()
 {
-    cout << "请选择运行模式, '1'表示编码, '2'表示解码, 请输入:";
+    cout << "Please select run mode, '1' represents coding, '2' represents decoding, please enter:";
     int mode = 1;
     cin >> mode;
     return mode;
 }
 int read_printmode()
 {
-    cout << "\n请选择编码模式, '1'表示编码为字符串, '2'表示编码为比特流, 请输入:";
-    int mode = 1;
-    cin >> mode;
-    return mode;
-}
-int read_readmode()
-{
-    cout << "\n请选择解码模式, '1'表示待解码文件为文本文件, '2'表示待解码文件为二进制文件, 请输入:";
+    cout << "\nPlease select output format, '1' represents strings, '2'represents bits, please enter:";
     int mode = 1;
     cin >> mode;
     return mode;
@@ -32,7 +24,7 @@ int read_readmode()
 bool read_filename(char *infile, char *outfile)
 {
     bool format_flag = 0;
-    cout << "\n请输入输入文件名:";
+    cout << "\nPlease enter input file:";
     cin >> infile;
     //判断文件名是否合法
     for (int i = 0; infile[i] != '\0'; i++)
@@ -43,10 +35,10 @@ bool read_filename(char *infile, char *outfile)
         }
     if (!format_flag)
     {
-        cout << "文件格式错误!";
+        cout << "File name error!";
         return false;
     }
-    cout << "\n请输入输出文件名:";
+    cout << "\nPlease enter output file:";
     cin >> outfile;
     format_flag = 0;
     for (int i = 0; outfile[i] != '\0'; i++)
@@ -57,133 +49,113 @@ bool read_filename(char *infile, char *outfile)
         }
     if (!format_flag)
     {
-        cout << "文件格式错误!";
+        cout << "File name error!";
         return false;
     }
     return true;
 }
 
-//输入待编码或解码字符串
-bool read_string(char *str, char *infile) //输入待编码字符串
-{
-    ifstream in(infile, ios::in | ios::binary); //以二进制输入格式打开
-    if (!in)
-    {
-        cout << "文件打开失败!";
-        return false;
-    }
-    //以二进制方式读入整个文件
-    int begin = in.tellg();
-    in.seekg(0, ios::end);
-    int end = in.tellg();
-    in.seekg(0, ios::beg);
-
-    in.read(str, end - begin);
-
-    in.close();
-    return true;
-}
-bool read_string(char *str, int *msg, char *infile, int mode) //输入哈夫曼树信息和待解码字符串
-{
-    ifstream in(infile, ios::in | ios::binary); //以二进制输入格式打开
-    if (!in)
-    {
-        cout << "文件打开失败!";
-        return false;
-    }
-    char ch;
-    int t;
-    /*
-    if (mode == 1) //输入文件为文本文件
-    {
-        //将文件内容全部读入, 并分为还原信息和解码内容
-        in.read((char *)&ch, sizeof(char));
-        while (in >> t && t < INF)
-        {
-            msg[ch] = t;
-            in.read((char *)&ch, sizeof(char));
-        }
-        int begin = in.tellg();
-        in.seekg(0, ios::end);
-        int end = in.tellg();
-        in.seekg(begin, ios::beg);
-        in.read(str, end - begin);
-    }
-    */
-    if (mode == 1 || mode == 2) //输入文件为二进制文件
-    {
-        int tot;
-        in.read((char *)&tot, sizeof(tot));
-        for (int i = 0; i < tot; i++)
-        {
-            in.read((char *)&ch, sizeof(ch));
-            in.read((char *)&t, sizeof(int));
-            msg[ch] = t;
-        }
-        int begin = in.tellg();
-        in.seekg(0, ios::end);
-        int end = in.tellg();
-        begin++;
-        in.seekg(begin, ios::beg);
-        in.read(str, end - begin);
-        str[MaxStringLength - 1] = (end - begin) >> 4;
-        str[MaxStringLength - 2] = (end - begin) % 256;
-    }
-    in.close();
-    return true;
-}
 //和别小组统一格式后的读入
-bool read_string_group(char *str, int *msg, char *infile, int mode)
+bool read_string_group(unsigned long long *msg, char *infile, int &mode)
 {
+    ifstream in(infile, ios::in | ios::binary);
+    if (!in)
+    {
+        cout << "Failed to open file";
+        return false;
+    }
+    int fmn;
+    bool flag = 0;
+    in.read((char *)&fmn, sizeof(int));
+    in.read((char *)&flag, sizeof(bool));
+    mode = flag + 1;
+    for (int i = 0; i < MaxCharSize; i++)
+        in.read((char *)&msg[i], sizeof(unsigned long long));
+
+    in.close();
+    return true;
 }
 
-//输出编码或解码结果
-void print_codes(char *codingstring, char (*map)[MaxTreeDepth], char *outfile, int mode) //编码结果
+//小组统一格式
+void print_msg_group(unsigned long long *appear_times, char *outfile, int mode)
 {
+    ofstream out(outfile, ios::out | ios::trunc | ios::binary);
+    out.write((char *)&FILE_MAGIC_NUMBER, sizeof(int));
+    bool flag = (mode == 1 ? 0 : 1);
+    out.write((char *)&flag, sizeof(bool));
+    unsigned long long a;
+    for (int i = 0; i < MaxCharSize; i++)
+    {
+        a = appear_times[i];
+        out.write((char *)&a, sizeof(unsigned long long));
+    }
+    out.close();
+}
+void print_bits(unsigned long long *appear_times, char (*map)[MaxTreeDepth], char *outfile)
+{
+    unsigned long long tot = 0;
+    for (int i = 0; i < MaxCharSize; i++)
+        if (appear_times[i])
+            tot += appear_times[i] * strlen(map[i]);
     ofstream out(outfile, ios::out | ios::binary | ios::app);
+    out.write((char *)&tot, sizeof(tot));
+    out.close();
+}
+void print_codes_group(char *infile, char (*map)[MaxTreeDepth], char *outfile, int mode)
+{
+    ifstream in(infile, ios::in | ios::binary);
+    ofstream out(outfile, ios::out | ios::binary | ios::app);
+    in.seekg(0, ios::end);
+    unsigned long long l = in.tellg();
+    in.seekg(0, ios::beg);
+    unsigned char ch;
     if (mode == 1) //输出为字符串
     {
-        int l = strlen(codingstring);
         for (int i = 0; i < l; i++)
-            out << map[codingstring[i]];
+        {
+            in.read((char *)&ch, sizeof(ch));
+            out << map[ch];
+        }
     }
     else if (mode == 2) //输出为比特流
     {
-        char byte = 0;
-        int l = strlen(codingstring);
         //组装字节
-        char cnt = 1, code = 0;
+        char cnt = 7, code = 0;
         for (int i = 0; i < l; i++)
         {
-            for (int j = 0; map[codingstring[i]][j] != '\0'; j++, cnt++)
+            in.read((char *)&ch, sizeof(ch));
+            for (int j = 0; map[ch][j] != '\0'; j++, cnt--)
             {
-                code = (code << 1) + map[codingstring[i]][j] - '0';
-                if (cnt == 8)
+                code = code | ((map[ch][j] - '0') << cnt);
+                if (cnt == 0)
                 {
                     out.write((char *)&code, sizeof(code));
-                    cnt = 0;
+                    cnt = 8;
                     code = 0;
                 }
             }
         }
-        if (--cnt)
+        if (cnt < 7)
             out.write((char *)&code, sizeof(char));
-        else
-            cnt = 8;
-        out.write((char *)&cnt, sizeof(char));
     }
+    in.close();
     out.close();
 }
-void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //解码结果
+void print_codes_group(HuffmanTree &HT, char *infile, char *outfile, int mode)
 {
     Node *root = HT.root();
     ofstream out(outfile, ios::out | ios::binary | ios::trunc);
+    ifstream in(infile, ios::in | ios::binary);
+    in.seekg(0, ios::end);
+    unsigned long long l = in.tellg(), st = sizeof(int) + sizeof(bool) + MaxCharSize * sizeof(unsigned long long);
+    in.seekg(st);
+    char ch;
     if (mode == 1) //从文本文件解码
     {
-        int l = strlen(codedstring);
-        for (int i = 0; i < l; i++)
+        for (int i = st; i < l; i++)
         {
-            if (codedstring[i] == '0' && root->left() != NULL)
+            in.read((char *)&ch, sizeof(ch));
+            if (ch == '0' && root->left() != NULL)
             {
                 root = root->left();
                 if (root->is_leave())
@@ -192,7 +164,7 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
                     root = HT.root();
                 }
             }
-            else if (codedstring[i] == '1' && root->right() != NULL)
+            else if (ch == '1' && root->right() != NULL)
             {
                 root = root->right();
                 if (root->is_leave())
@@ -205,14 +177,15 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
     }
     else if (mode == 2) //从二进制文件解码
     {
-        int l = (codedstring[MaxStringLength - 1] << 4) + codedstring[MaxStringLength - 2];
-        char cnt = codedstring[l - 1];
-        char ch = 0;
-        for (int i = 0; i < l - 1; i++)
+        unsigned long long tot;
+        in.read((char *)&tot, sizeof(tot));
+        for (int i = st + sizeof(tot); i < l; i++)
         {
-            ch = codedstring[i];
-            for (int j = (i == l - 2 ? cnt - 1 : 7); j >= 0; j--)
-                if (ch & (1 << j) && root->right() != NULL)
+            in.read((char *)&ch, sizeof(ch));
+            for (int j = 7; j >= 0; j--)
+                if ((i - 8) * 8 + (7 - j) == tot)
+                    break;
+                else if (ch & (1 << j) && root->right() != NULL)
                 {
                     root = root->right();
                     if (root->is_leave())
@@ -232,85 +205,10 @@ void print_codes(HuffmanTree &HT, char *codedstring, char *outfile, int mode) //
                 }
         }
     }
+    in.close();
     out.close();
-}
-//与其他小组统一格式后的输出
-void print_codes_group()
-{
 }
 
-//输出还原信息
-void print_msg(int *appear_times, char *outfile, int mode)
-{
-    ofstream out(outfile, ios::out | ios::binary | ios::trunc);
-    if (mode == 1 || mode == 2)
-    {
-        int tot = 0;
-        for (int i = 0; i < MaxCharSize; i++)
-            if (appear_times[i])
-                tot++;
-        out.write((char *)&tot, sizeof(int));
-        for (int i = 0; i < MaxCharSize; i++)
-        {
-            if (appear_times[i])
-            {
-                out.write((char *)&i, sizeof(char));
-                out.write((char *)&appear_times[i], sizeof(int));
-            }
-        }
-        out << '\n';
-    }
-    out.close();
-}
-void print_msg_group(int *appear_times, char *outfile, int mode)
-{
-    ostream out(outfile, ios::out | ios::trunc | ios::binary);
-    out.write((char *)&FILE_MAGIC_NUMBER, sizeof(int));
-    bool flag = (mode == 1 ? 0 : 1);
-    out.write((char *)&flag, sizeof(bool));
-    unsigned long long a;
-    for (int i = 0; i < MaxCharSize; i++)
-    {
-        a = appear_times[i];
-        out.write((char *)&a, sizeof(unsigned long long));
-    }
-    if (flag == 0) //文本
-    {
-        int l = strlen(codedstring);
-        for (int i = 0; i < l; i++)
-        {
-            if (codedstring[i] == '0' && root->left() != NULL)
-            {
-                root = root->left();
-                if (root->is_leave())
-                {
-                    out << root->data();
-                    root = HT.root();
-                }
-            }
-            else if (codedstring[i] == '1' && root->right() != NULL)
-            {
-                root = root->right();
-                if (root->is_leave())
-                {
-                    out << root->data();
-                    root = HT.root();
-                }
-            }
-        }
-    }
-}
-//输出某个字符串或者数组
-void show(char *str)
-{
-    cout << str << endl;
-}
-void show(int *a, int l)
-{
-    for (int i = 0; i < 256; i++)
-        if (a[i])
-            cout << (char)i << " : " << a[i] << endl;
-}
 //输出哈夫曼树
 void showTree(Node *t)
 {

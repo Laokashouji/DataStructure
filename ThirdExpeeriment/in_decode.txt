@@ -1,4 +1,3 @@
 2
 encode.dat
-decode.dat
-2
+decode.exe
