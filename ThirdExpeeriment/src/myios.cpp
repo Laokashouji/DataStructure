@@ -202,7 +202,7 @@ void print_codes_group(HuffmanTree &HT, char *infile, char *outfile, int mode)
         {
             in.read((char *)&ch, sizeof(ch));     //读入待解码字节, 拆解为比特位根据哈夫曼树解码
             for (int j = 7; j >= 0; j--)          //从字节的最高一位开始拆起
-                if ((i - 8) * 8 + (7 - j) == tot) //读入了所有有效比特位后退出循环
+                if ((i - st - 8) * 8 + (7 - j) >= tot) //读入了所有有效比特位后退出循环
                     break;
                 else if (ch & (1 << j) && root->right() != NULL) //对比字节的第j位是否为1
                 {
