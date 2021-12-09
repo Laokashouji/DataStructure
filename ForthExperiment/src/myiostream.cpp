@@ -1,15 +1,16 @@
 #include "myiostream.h"
 #include <cstdio>
 //输出最短路
-void print_minpath(int path[], const Graph &G, int s)
+void print_path(int path[], const Graph &G, int s)
 {
     if(path[s] != -1)
     {
-        print_minpath(path, G, path[s]);
+        print_path(path, G, path[s]);
         printf("->");
     }
     printf("%s", G.data[s]);
 }
+
 //选择输入源
 bool read_mode(char *filename)
 {

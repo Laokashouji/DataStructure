@@ -5,6 +5,8 @@
 #include <fstream>
 
 #define MaxfilenameLength 50
+
+using namespace std;
 //初始化图
 void Graph::init()
 {
@@ -20,11 +22,13 @@ void Graph::init()
             return;
         }
     }
-    
+    //读入图
     cin >> n >> m;
     for (int i = 0; i < n; i++)
         cin >> data[i];
     int x, y, z, tot = 0;
+    memset(head, 0, sizeof(head));
+    memset(tail, 0, sizeof(tail));
     for (int i = 0; i < m; i++)
     {
         scanf("%d%d%d", &x, &y, &z);
@@ -43,6 +47,7 @@ void Graph::init()
 
     if (in)
         in.close();
+
 }
 
 //链式前向星加边
@@ -52,5 +57,7 @@ void Graph::addEdge(int x, int y, int z, int &tot)
     edges[tot].to = y;
     edges[tot].length = z;
     edges[tot].next = head[x];
+    edges[tot].nextf = tail[y];
     head[x] = tot;
+    tail[y] = tot;
 }
