@@ -48,7 +48,7 @@ bool dijkstra(Graph &G)
     //输出最短路
     if (d[G.e] < INF)
     {
-        printf("\n");
+        printf("\nThe short path is ");
         print_path(path, G, G.e);
         return true;
     }
@@ -119,7 +119,7 @@ bool AOE(Graph &G)
     //求关键路径
     if (Vl[G.e] == INF)
         return false;
-    printf("\n");
+    printf("\nThe AOE path is ");
     print_path(path, G, G.e);
     return true;
 }
