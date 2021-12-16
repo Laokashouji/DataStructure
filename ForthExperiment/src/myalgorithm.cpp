@@ -128,7 +128,7 @@ bool AOE(Graph &G)
         return false;
 
     //打印关键路径
-    printf("\nThe AOE path is ");
+    printf("\nOne of the AOE path is ");
     print_path(path, G, G.e);
     return true;
 }
