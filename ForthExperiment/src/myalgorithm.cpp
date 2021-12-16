@@ -5,7 +5,7 @@
 #include "myiostream.h"
 using namespace std;
 
-#define max
+//求最短路
 bool dijkstra(Graph &G)
 {
     // d保存每个点到起点的最短路, 除起点的最短路为0外, 其他点初始化为INF
@@ -57,6 +57,7 @@ bool dijkstra(Graph &G)
 //求关键路径
 bool AOE(Graph &G)
 {
+    //初始化变量
     int Ve[MaxNodeSize], Vl[MaxNodeSize];
     memset(Ve, 0, sizeof(Ve));
     memset(Vl, 0x3f, sizeof(Vl));
@@ -64,6 +65,12 @@ bool AOE(Graph &G)
     memset(vis, 0, sizeof(vis));
     int path[MaxNodeSize];
     memset(path, -1, sizeof(path));
+
+    //重建图, 删除无关节点, pre表示点是否在重建后的图中
+    bool pre[MaxNodeSize];
+    AOE_init(G, pre, G.s, G.e);
+    if (!pre[G.s] || !pre[G.e])
+        return false;
 
     //计算Ve[i], 即事件的最早可能开始时间
     queue<int> Q;
@@ -76,6 +83,8 @@ bool AOE(Graph &G)
         for (int i = G.head[x]; i; i = G.edges[i]._next())
         {
             int y = G.edges[i]._to(), z = G.edges[i]._length();
+            if (!pre[y])
+                continue;
             if (Ve[y] < Ve[x] + z)
                 Ve[y] = Ve[x] + z;
             if (!vis[y])
@@ -85,8 +94,6 @@ bool AOE(Graph &G)
             }
         }
     }
-    if (!Ve[G.e])
-        return false;
 
     //计算Vl[i], 即事件的最迟开始时间, 并求关键路径
     memset(vis, 0, sizeof(vis));
@@ -100,6 +107,8 @@ bool AOE(Graph &G)
         for (int i = G.tail[x]; i; i = G.edges[i]._nextf())
         {
             int y = G.edges[i]._from(), z = G.edges[i]._length();
+            if (!pre[y])
+                continue;
             if (Vl[y] > Vl[x] - z)
                 Vl[y] = Vl[x] - z;
             if (!vis[y])
@@ -115,11 +124,32 @@ bool AOE(Graph &G)
             }
         }
     }
-    
-    //求关键路径
     if (Vl[G.e] == INF)
         return false;
+
+    //打印关键路径
     printf("\nThe AOE path is ");
     print_path(path, G, G.e);
     return true;
+}
+//重建图, 删除无关节点
+void AOE_init(Graph &G, bool *pre, int s, int e)
+{
+    memset(pre, 0, sizeof(pre));
+    bool v1[MaxNodeSize], v2[MaxNodeSize];
+    memset(v1, 0, sizeof(v1));
+    memset(v2, 0, sizeof(v2));
+    dfs(G, v1, s);
+    Graph gg = G.reverse();
+    dfs(gg, v2, e);
+    for (int i = 0; i < G.nsize(); i++)
+        pre[i] = v1[i] & v2[i];
+}
+//递归判断点的连通性
+void dfs(Graph &G, bool *vis, int x)
+{
+    vis[x] = 1;
+    for (int i = G.head[x]; i; i = G.edges[i]._next())
+        if (!vis[G.edges[i]._to()])
+            dfs(G, vis, G.edges[i]._to());
 }

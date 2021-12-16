@@ -33,9 +33,12 @@ private:
     int tail[MaxNodeSize];                   //保存图中以该顶点为终点的最后一条边的编号
 
 public:
-    void init();                                               //初始化图
-    void addEdge(int x, int y, int z, int &tot);               //链式前向星加边
+    void init();                                                            //初始化图
+    void addEdge(int x, int y, int z, int tot);               //链式前向星加边
+    int nsize(){ return n;}                                              //返回图的顶点数
+    Graph reverse();                                                    //反转边的起点和终点
     friend bool dijkstra(Graph &G);                            //求最短路
     friend bool AOE(Graph &G);                                 //求关键路径
+    friend void dfs(Graph &G, bool *vis, int x);            //求与x连通的点
     friend void print_path(int path[], const Graph &G, int s); //打印路径
 };

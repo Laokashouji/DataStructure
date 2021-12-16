@@ -26,13 +26,13 @@ void Graph::init()
     cin >> n >> m;
     for (int i = 0; i < n; i++)
         cin >> data[i];
-    int x, y, z, tot = 0;
+    int x, y, z;
     memset(head, 0, sizeof(head));
     memset(tail, 0, sizeof(tail));
-    for (int i = 0; i < m; i++)
+    for (int i = 1; i <= m; i++)
     {
         scanf("%d%d%d", &x, &y, &z);
-        addEdge(x, y, z, tot);
+        addEdge(x, y, z, i);
     }
     char st[MaxNodeNameSize], ed[MaxNodeNameSize];
     cin >> st >> ed;
@@ -47,17 +47,30 @@ void Graph::init()
 
     if (in)
         in.close();
-
 }
 
 //链式前向星加边
-void Graph::addEdge(int x, int y, int z, int &tot)
+void Graph::addEdge(int x, int y, int z, int tot)
 {
-    edges[++tot].from = x;
+    edges[tot].from = x;
     edges[tot].to = y;
     edges[tot].length = z;
     edges[tot].next = head[x];
     edges[tot].nextf = tail[y];
     head[x] = tot;
     tail[y] = tot;
+}
+
+Graph Graph::reverse()
+{
+    Graph G;
+    G.m = m, G.s = e, G.e = s, G.n = n;
+    memcpy(G.data, data, sizeof(data));
+    int tot=0;
+    for (int i = 1; i <= m; i++)
+    {
+        Edge &e = edges[i];
+        G.addEdge(e.to, e.from, e.length, i);
+    }
+    return G;
 }
